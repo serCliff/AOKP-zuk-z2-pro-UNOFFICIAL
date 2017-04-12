@@ -1,0 +1,48 @@
+assert(getprop("ro.product.device") == "z2_row" || getprop("ro.build.product") == "z2_row" || getprop("ro.product.device") == "z2_row" || getprop("ro.build.product") == "z2_row" || getprop("ro.product.device") == "z2_row" || getprop("ro.build.product") == "z2_row" || abort("This package is for device: z2_row,zuk_2121,zuk_z2; this device is " + getprop("ro.product.device") + "."););
+ui_print("Target: z2_row/zuk_2121/zuk_z2_pro:6.0.1/FIXNAOP5801607182S/letv07181411:user/release-keys");
+ifelse(is_mounted("/system"), unmount("/system"));
+package_extract_dir("install", "/tmp/install");
+set_metadata_recursive("/tmp/install", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0644);
+set_metadata_recursive("/tmp/install/bin", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0755);
+ui_print("******************************************");
+ui_print("*    ______  _____   __  __   _____      *");
+ui_print("*   /\  _  \/\  __`\/\ \/\ \ /\  _ `\    *");
+ui_print("*   \ \ \L\ \ \ \/\ \ \ \/'/'\ \ \L\ \   *");
+ui_print("*    \ \  __ \ \ \ \ \ \ , <  \ \ ,__/   *");
+ui_print("*     \ \ \/\ \ \ \_\ \ \ \\\`\ \ \ \/    *");
+ui_print("*      \ \_\ \_\ \_____\ \_\ \_\\\ \_\    *");
+ui_print("*       \/_/\/_/\/_____/\/_/\/_/ \/_/    *");
+ui_print("*                                        *");
+ui_print("*                         http://aokp.co *");
+ui_print("******************************************");
+ui_print("******************************************");
+ui_print("************ UNOFFICIAL BUILD ************");
+ui_print("******************************************");
+ui_print("*      AOKPEPE Spain Team");
+ui_print("*   ZUK Z2 PRO ");
+ui_print("******************************************");
+if is_mounted("/data") then
+package_extract_file("META-INF/org/cyanogenmod/releasekey", "/tmp/releasekey");
+run_program("/tmp/install/bin/otasigcheck.sh") != "31744" || abort("Can't install this package on top of incompatible data. Please try another package or run a factory reset");
+else
+mount("f2fs", "EMMC", "/dev/block/bootdevice/by-name/userdata", "/data", "");
+package_extract_file("META-INF/org/cyanogenmod/releasekey", "/tmp/releasekey");
+run_program("/tmp/install/bin/otasigcheck.sh") != "31744" || abort("Can't install this package on top of incompatible data. Please try another package or run a factory reset");
+unmount("/data");
+endif;
+show_progress(0.750000, 0);
+ui_print("Patching system image unconditionally...");
+block_image_update("/dev/block/bootdevice/by-name/system", package_extract_file("system.transfer.list"), "system.new.dat", "system.patch.dat");
+ui_print("Verifying the updated system image...");
+if range_sha1("/dev/block/bootdevice/by-name/system", "72,0,32770,32961,32963,33465,65535,65536,65538,66040,98303,98304,98306,98497,98499,99001,131071,131072,131074,131576,157711,163840,163842,164033,164035,164537,196607,196608,196610,229376,229378,229569,229571,230073,262143,262144,262146,294912,294914,295105,295107,295609,327679,327680,327682,360448,360450,393216,393218,425984,425986,458752,458754,491520,491522,524288,524290,557056,557058,589824,589826,622592,622594,655360,655362,688128,688130,720896,720898,753664,753666,754168,770047") == "965e30bd8ef04102b37de36bd6c772e1fc67a95c" then
+if range_sha1("/dev/block/bootdevice/by-name/system", "104,32770,32961,32963,33465,65535,65536,65538,66040,98303,98304,98306,98497,98499,99001,131071,131072,131074,131576,157711,158223,163328,163840,163842,164033,164035,164537,196607,196608,196610,197122,228864,229376,229378,229569,229571,230073,262143,262144,262146,262658,294400,294912,294914,295105,295107,295609,327679,327680,327682,328194,359936,360448,360450,360962,392704,393216,393218,393730,425472,425984,425986,426498,458240,458752,458754,459266,491008,491520,491522,492034,523776,524288,524290,524802,556544,557056,557058,557570,589312,589824,589826,590338,622080,622592,622594,623106,654848,655360,655362,655874,687616,688128,688130,688642,720384,720896,720898,721410,753152,753664,753666,754168,770047,770048") == "62f801d8f4e05e6daba4b8122995f98aca6cac1c" then
+ui_print("Verified the updated system image.");
+else
+  abort("system partition has unexpected non-zero contents after OTA update");
+endif;
+else
+  abort("system partition has unexpected contents after OTA update");
+endif;
+show_progress(0.050000, 5);
+package_extract_file("boot.img", "/dev/block/bootdevice/by-name/boot");
+show_progress(0.200000, 10);

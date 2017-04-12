@@ -1,0 +1,3 @@
+post-build=LeEco/LeMax2_NA/le_x2_na:6.0.1/FIXNAOP5801607182S/letv07181411:user/release-keys
+post-timestamp=1490470202
+pre-device=le_x2
